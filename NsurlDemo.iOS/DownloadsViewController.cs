@@ -15,7 +15,7 @@ namespace NsurlDemo.iOS
 	{
 		#region Constants
 
-		private const int TotalViews = 10;
+		private const int TotalViews = 0;
 		private const int ViewHeight = 250;
 
 		#endregion
@@ -43,9 +43,22 @@ namespace NsurlDemo.iOS
 			downloadButton.Layer.CornerRadius = 10f;
 			downloadButton.TouchUpInside += DownloadButtonOnTouchUpInside;
 
-			scrollView = new UIScrollView();
+		    var customProgView = new UICustomProgressView();
 
-			for (var i = 0; i < TotalViews; i++)
+			scrollView = new UIScrollView();
+            scrollView.AddSubview(customProgView);
+			scrollView.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
+            scrollView.AddConstraints(new FluentLayout[]
+            {
+                customProgView.AtTopOf(scrollView),
+                customProgView.AtLeftOf(scrollView),
+                customProgView.WithSameWidth(scrollView),
+                customProgView.Height().EqualTo(300)
+
+            });
+
+            #region For Loop
+            for (var i = 0; i < TotalViews; i++)
 			{
 				var view = new UIProgressiveImageView();
 				view.ImageView.ContentMode = UIViewContentMode.ScaleAspectFit;
@@ -76,9 +89,10 @@ namespace NsurlDemo.iOS
 						view.WithSameHeight(previousView)
 					});
 				}
-			}
+            }
+            #endregion
 
-			View.AddSubviews(downloadButton, scrollView);
+            View.AddSubviews(downloadButton, scrollView);
 			View.SubviewsDoNotTranslateAutoresizingMaskIntoConstraints();
 
 			View.AddConstraints(new[]
@@ -180,7 +194,7 @@ namespace NsurlDemo.iOS
 
 		private void SessionOnFileDownloadedSuccessfully(ushort index, string filePath)
 		{
-            Logger.Log($"Download at {index} was successful.");
+            Logger.Log(string.Format("Download at {0} was successful.", index));
 
             InvokeOnMainThread(() =>
 			{
@@ -194,8 +208,9 @@ namespace NsurlDemo.iOS
 
 		private void SessionOnFileDownloadFailed(ushort index, NSError error)
 		{
-		    string title = $"Download at index {index} failed.";
-            Logger.Log($"{title} {error.DebugDescription}");
+		    string title = string.Format("Download at index {0} failed.", index);
+
+            Logger.Log(string.Format("{0} {1}", title, error.Description));
 
 		    InvokeOnMainThread(() =>
 		    {
