@@ -38,7 +38,7 @@ namespace NsurlDemo.iOS
             pollingBackgroundWorker.FinishExecution();
             UIApplication
                 .SharedApplication
-                .SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
+                .SetMinimumBackgroundFetchInterval(2);
         }
         
         public override void WillEnterForeground(UIApplication application)
