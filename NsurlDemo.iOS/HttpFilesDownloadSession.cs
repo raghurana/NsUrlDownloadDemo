@@ -45,8 +45,8 @@ namespace NsurlDemo.iOS
 
         public ObservableCollection<DownloadFileInfo> DownloadQueue
 	    {
-	        get;
-	    }
+	        get; private set; 
+        }
 
 		#endregion
 
@@ -119,7 +119,7 @@ namespace NsurlDemo.iOS
 
 		public override void DidFinishEventsForBackgroundSession(NSUrlSession session)
 		{
-            Logger.Log($"DidFinishEventsForBackgroundSession called for session {session.Configuration.Identifier}");
+            Logger.Log(string.Format("DidFinishEventsForBackgroundSession called for session {0}", session.Configuration.Identifier));
 
             var appDelegate = (AppDelegate) UIApplication.SharedApplication.Delegate;
 

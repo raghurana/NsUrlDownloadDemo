@@ -93,7 +93,11 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+<<<<<<< HEAD
     <Compile Include="TimespanExtensions.cs" />
+=======
+    <Compile Include="UICustomProgressView.cs" />
+>>>>>>> fc6f403bdef8dc0ff0922a5edd1aabfad5740ddb
     <Compile Include="UIProgressiveImageView.cs" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
