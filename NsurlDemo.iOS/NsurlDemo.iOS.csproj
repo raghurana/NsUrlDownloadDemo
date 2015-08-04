@@ -84,6 +84,7 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PollingBackgroundWorker.cs" />
     <Compile Include="DownloadFileInfo.cs" />
     <Compile Include="DownloadsViewController.cs" />
     <Compile Include="DownloadTaskInfo.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="TimespanExtensions.cs" />
     <Compile Include="UIProgressiveImageView.cs" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />

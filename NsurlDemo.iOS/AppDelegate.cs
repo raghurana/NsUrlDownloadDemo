@@ -11,13 +11,15 @@ namespace NsurlDemo.iOS
     public partial class AppDelegate : UIApplicationDelegate
     {
         private UIWindow window;
-
-        public static string BgSessionIdentifier = "com.something.unique";
+        private PollingBackgroundWorker pollingBackgroundWorker;
 
         public Action BgSessionCompletionHandler;
+        public static string BgSessionIdentifier = "com.something.unique";
         
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            pollingBackgroundWorker = new PollingBackgroundWorker();
+
             window = new UIWindow(UIScreen.MainScreen.Bounds)
             {
                 RootViewController = new DownloadsViewController()
@@ -25,15 +27,36 @@ namespace NsurlDemo.iOS
 
             window.MakeKeyAndVisible();
 
+            KickOffForegroundPolling();
+
             return true;
         }
 
         public override void DidEnterBackground(UIApplication application)
         {
             Logger.Log("Did Enter Background");
+            pollingBackgroundWorker.FinishExecution();
+            UIApplication
+                .SharedApplication
+                .SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
+        }
+        
+        public override void WillEnterForeground(UIApplication application)
+        {
+            Logger.Log("Will Enter Foreground");
+            UIApplication
+               .SharedApplication
+               .SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalNever);
+
+            KickOffForegroundPolling();
         }
 
-
+        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            Console.WriteLine("Performing Background Fetch...");
+            completionHandler(UIBackgroundFetchResult.NewData);
+        }
+        
         public override void HandleEventsForBackgroundUrl(
             UIApplication application, 
             string sessionIdentifier, 
@@ -42,5 +65,14 @@ namespace NsurlDemo.iOS
             Logger.Log("HandleEventsForBackgroundUrl called, we now have a BgSessionCompletionHandler");
             BgSessionCompletionHandler = completionHandler;
         }
+
+        private void KickOffForegroundPolling()
+        {
+            pollingBackgroundWorker.ExecuteInBackground(() =>
+            {
+                Console.WriteLine("Performing Foreground Fetch...");
+            }, TimeSpan.FromSeconds(2));
+        }
+
     }
 }
